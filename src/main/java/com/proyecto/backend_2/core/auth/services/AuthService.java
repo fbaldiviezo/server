@@ -1,5 +1,8 @@
 package com.proyecto.backend_2.core.auth.services;
 
+import java.time.LocalDate;
+
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
@@ -8,9 +11,15 @@ import com.proyecto.backend_2.core.auth.dtos.AuthResponse;
 import com.proyecto.backend_2.core.auth.dtos.ChangePasswordRequest;
 import com.proyecto.backend_2.core.auth.dtos.LoginRequest;
 import com.proyecto.backend_2.core.auth.dtos.RegisterRequest;
+import com.proyecto.backend_2.exceptions.ResourceAlreadyExistsException;
+import com.proyecto.backend_2.features.general.GeneralModel;
+import com.proyecto.backend_2.features.general.GeneralRepository;
 import com.proyecto.backend_2.features.users.UserModel;
 import com.proyecto.backend_2.features.users.UserRepository;
 import com.proyecto.backend_2.features.users.services.UsuariosMenuService;
+import com.proyecto.backend_2.ids.GeneralId;
+import com.proyecto.backend_2.utils.ApiResponse;
+import com.proyecto.backend_2.utils.CustomResponseBuilder;
 
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -24,8 +33,10 @@ public class AuthService {
         private final UserRepository repository;
         private final UsuariosMenuService usuariosMenuService;
         private final JwtService jwtService;
+        private final GeneralRepository generalRepository;
         private final PasswordEncoder passwordEncoder;
         private final AuthenticationManager authenticationManager;
+        private final CustomResponseBuilder customResponseBuilder;
 
         public AuthResponse login(LoginRequest login) {
                 authenticationManager
@@ -34,6 +45,7 @@ public class AuthService {
 
                 UserDetails user = repository.findByLogin(login.getLogin())
                                 .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado"));
+
                 String token = jwtService.getToken(user);
                 return AuthResponse.builder()
                                 .persona(repository.getPersonaUsuario(login.getLogin()))
@@ -42,29 +54,37 @@ public class AuthService {
                                 .build();
         }
 
-        public AuthResponse register(RegisterRequest register) {
+        public ResponseEntity<ApiResponse> register(RegisterRequest register) {
+                if (repository.existsById(register.getLogin())) {
+                        throw new ResourceAlreadyExistsException("El recurso ya existe");
+                }
+                if (repository.getCodp(register.getCodp())) {
+                        throw new ResourceAlreadyExistsException("La persona ya tiene un login");
+                }
                 UserModel userRegister = UserModel.builder()
                                 .login(register.getLogin())
                                 .password(passwordEncoder.encode(register.getPassword()))
-                                .estado(register.getEstado())
+                                .estado(1)
                                 .build();
                 repository.save(userRegister);
                 repository.changeCodp(register.getCodp(), register.getLogin());
-                return AuthResponse.builder()
+
+                String codg = "G" + register.getLogin();
+                Integer gestion = LocalDate.now().getYear();
+                GeneralId gId = new GeneralId(codg, register.getLogin());
+                generalRepository.save(new GeneralModel(gId, gestion, userRegister));
+
+                AuthResponse auth = AuthResponse.builder()
                                 .token(jwtService.getToken(userRegister))
                                 .build();
+                return customResponseBuilder.buildResponse("Registrado con exito", auth);
         }
 
-        public AuthResponse changePassword(ChangePasswordRequest request) {
+        public ResponseEntity<ApiResponse> changePassword(ChangePasswordRequest request) {
                 UserModel user = repository.findByLogin(request.getLogin())
                                 .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado"));
                 user.setPassword(passwordEncoder.encode(request.getNewPassword()));
                 repository.save(user);
-
-                String newToken = jwtService.getToken(user);
-
-                return AuthResponse.builder()
-                                .token(newToken)
-                                .build();
+                return customResponseBuilder.buildResponse("Contraseña modificada con exito", null);
         }
 }

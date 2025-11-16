@@ -33,4 +33,11 @@ public interface UserRepository extends JpaRepository<UserModel, String> {
     // Query para obtener la persona
     @Query(value = "select p.* from usuarios u join personal p on p.codp = u.codp where u.login = :xlogin", nativeQuery = true)
     PersonalModel getPersonaUsuario(@Param("xlogin") String xlogin);
+
+    @Query(value = "SELECT EXISTS (\n" + //
+            "    SELECT 1\n" + //
+            "    FROM usuarios\n" + //
+            "    WHERE codp = :codp\n" + //
+            ") AS existe;", nativeQuery = true)
+    Boolean getCodp(@Param("codp") Integer codp);
 }

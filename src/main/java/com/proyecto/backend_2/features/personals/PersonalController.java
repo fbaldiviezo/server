@@ -2,6 +2,7 @@ package com.proyecto.backend_2.features.personals;
 
 import java.util.List;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -11,9 +12,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.proyecto.backend_2.dtos.PersonalInfoUserDto;
-import com.proyecto.backend_2.dtos.PersonalRequestDto;
-import com.proyecto.backend_2.dtos.UpdatePersonalRequestDto;
+import com.proyecto.backend_2.dtos.requests.PersonalRequest;
+import com.proyecto.backend_2.dtos.requests.UpdatePersonalRequest;
+import com.proyecto.backend_2.dtos.responses.PersonalInfoUserDto;
+import com.proyecto.backend_2.utils.ApiResponse;
 
 import lombok.RequiredArgsConstructor;
 
@@ -40,17 +42,18 @@ public class PersonalController {
     }
 
     @PostMapping
-    public PersonalModel savePersonal(@RequestBody PersonalRequestDto request) {
+    public ResponseEntity<ApiResponse> savePersonal(@RequestBody PersonalRequest request) {
         return service.post(request);
     }
 
     @PutMapping("/{id}")
-    public PersonalModel updatePersonal(@RequestBody UpdatePersonalRequestDto request, @PathVariable int id) {
+    public ResponseEntity<ApiResponse> updatePersonal(@RequestBody UpdatePersonalRequest request,
+            @PathVariable int id) {
         return service.put(request, id);
     }
 
     @PutMapping("/{id}/{state}")
-    public void changeState(@PathVariable Integer id, @PathVariable Integer state) {
-        service.changeState(id, state);
+    public ResponseEntity<ApiResponse> changeState(@PathVariable Integer id, @PathVariable Integer state) {
+        return service.changeState(id, state);
     }
 }

@@ -17,6 +17,6 @@ public interface DataRepository extends JpaRepository<DataModel, DataId> {
     int insertCedula(@Param("id") Integer id, @Param("cedula") String cedula);
 
     @Modifying
-    @Query(value = "update datos set cedula = :cedula where codp = :codp", nativeQuery = true)
+    @Query(value = "update datos set cedula = ?2 where codp = :codp", nativeQuery = true)
     void updateCedula(@Param("codp") Integer codp, @Param("cedula") String cedula);
 }

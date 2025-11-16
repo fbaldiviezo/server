@@ -2,15 +2,19 @@ package com.proyecto.backend_2.features.users;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.proyecto.backend_2.features.dicta.DictaModel;
+import com.proyecto.backend_2.features.general.GeneralModel;
 import com.proyecto.backend_2.features.personals.PersonalModel;
 import com.proyecto.backend_2.features.usurol.UsurolModel;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -58,6 +62,14 @@ public class UserModel implements UserDetails {
     @Getter(AccessLevel.NONE)
     @OneToMany(mappedBy = "usuarioRol", fetch = FetchType.LAZY)
     private Set<UsurolModel> roles;
+
+    @Getter(AccessLevel.NONE)
+    @OneToOne(mappedBy = "usuario")
+    private GeneralModel general;
+
+    @Getter(AccessLevel.NONE)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "usuario", cascade = CascadeType.ALL)
+    List<DictaModel> dicta;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

@@ -12,6 +12,7 @@ import com.proyecto.backend_2.core.auth.dtos.ChangePasswordRequest;
 import com.proyecto.backend_2.core.auth.dtos.LoginRequest;
 import com.proyecto.backend_2.core.auth.dtos.RegisterRequest;
 import com.proyecto.backend_2.core.auth.services.AuthService;
+import com.proyecto.backend_2.utils.ApiResponse;
 
 import lombok.RequiredArgsConstructor;
 
@@ -27,12 +28,12 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<AuthResponse> register(@RequestBody RegisterRequest register) {
-        return ResponseEntity.ok(service.register(register));
+    public ResponseEntity<ApiResponse> register(@RequestBody RegisterRequest register) {
+        return service.register(register);
     }
 
     @PutMapping("/change-password")
-    public AuthResponse changePassword(@RequestBody ChangePasswordRequest request) {
+    public ResponseEntity<ApiResponse> changePassword(@RequestBody ChangePasswordRequest request) {
         return service.changePassword(request);
     }
 }

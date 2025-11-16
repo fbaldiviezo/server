@@ -2,7 +2,7 @@ package com.proyecto.backend_2.core.auth.dtos;
 
 import java.util.List;
 
-import com.proyecto.backend_2.dtos.RolDto;
+import com.proyecto.backend_2.dtos.responses.RolDto;
 import com.proyecto.backend_2.features.personals.PersonalModel;
 
 import lombok.AllArgsConstructor;

@@ -11,7 +11,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class RegisterRequest {
     String login;
-    Integer estado;
     String password;
     Integer codp;
 }

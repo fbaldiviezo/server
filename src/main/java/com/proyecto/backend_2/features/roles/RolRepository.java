@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import com.proyecto.backend_2.dtos.RolesByUsersDto;
+import com.proyecto.backend_2.dtos.responses.RolesByUsersDto;
 
 @Repository
 public interface RolRepository extends JpaRepository<RolModel, Integer> {
@@ -38,4 +38,7 @@ public interface RolRepository extends JpaRepository<RolModel, Integer> {
             "WHERE\n" + //
             "    r.codr = r.codr", nativeQuery = true)
     List<RolesByUsersDto> getRolesByUser(@Param("login") String login);
+
+    @Query(value = "SELECT EXISTS(SELECT 1 FROM roles WHERE nombre = :name) AS nombre_existente;", nativeQuery = true)
+    public Boolean findName(@Param("name") String name);
 }

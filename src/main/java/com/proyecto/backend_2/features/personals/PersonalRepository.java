@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import com.proyecto.backend_2.dtos.PersonalInfoUserDto;
+import com.proyecto.backend_2.dtos.responses.PersonalInfoUserDto;
 
 @Repository
 public interface PersonalRepository extends JpaRepository<PersonalModel, Integer> {
@@ -34,4 +34,11 @@ public interface PersonalRepository extends JpaRepository<PersonalModel, Integer
             "FROM personal p, usuarios u\n" + //
             "WHERE p.codp = u.codp", nativeQuery = true)
     List<PersonalInfoUserDto> getPersonalInfo();
+
+    @Query(value = "SELECT EXISTS (\n" + //
+            "    SELECT 1\n" + //
+            "    FROM personal\n" + //
+            "    WHERE nombre = :name\n" + //
+            ") AS nombre_existe;", nativeQuery = true)
+    public Boolean findName(@Param("name") String name);
 }

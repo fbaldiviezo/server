@@ -2,6 +2,7 @@ package com.proyecto.backend_2.features.roles;
 
 import java.util.List;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -10,7 +11,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.proyecto.backend_2.dtos.RolesByUsersDto;
+import com.proyecto.backend_2.dtos.responses.RolesByUsersDto;
+import com.proyecto.backend_2.utils.ApiResponse;
 
 import lombok.RequiredArgsConstructor;
 
@@ -43,17 +45,17 @@ public class RolController {
     // extrae los roles segun el usuario seleccionado
 
     @PostMapping
-    public RolModel saveRole(@RequestBody RolModel role) {
+    public ResponseEntity<ApiResponse> saveRole(@RequestBody RolModel role) {
         return service.post(role);
     }
 
     @PutMapping("/{id}")
-    public RolModel updateRole(@PathVariable Integer id, @RequestBody RolModel rol) {
+    public ResponseEntity<ApiResponse> updateRole(@PathVariable Integer id, @RequestBody RolModel rol) {
         return service.put(id, rol);
     }
 
     @PutMapping("/{id}/{state}")
-    public void changeState(@PathVariable Integer id, @PathVariable Integer state) {
-        service.changeState(id, state);
+    public ResponseEntity<ApiResponse> changeState(@PathVariable Integer id, @PathVariable Integer state) {
+        return service.changeState(id, state);
     }
 }

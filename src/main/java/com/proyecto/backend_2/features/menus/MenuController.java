@@ -2,6 +2,7 @@ package com.proyecto.backend_2.features.menus;
 
 import java.util.List;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -10,8 +11,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.proyecto.backend_2.dtos.MenuDto;
-import com.proyecto.backend_2.dtos.MenusByRoleDto;
+import com.proyecto.backend_2.dtos.responses.MenuDto;
+import com.proyecto.backend_2.dtos.responses.MenusByRoleDto;
+import com.proyecto.backend_2.utils.ApiResponse;
 
 import lombok.RequiredArgsConstructor;
 
@@ -49,17 +51,17 @@ public class MenuController {
     // extrae los menus segun el rol de usario
 
     @PostMapping
-    public MenuModel saveMenu(@RequestBody MenuModel menu) {
+    public ResponseEntity<ApiResponse> saveMenu(@RequestBody MenuModel menu) {
         return service.post(menu);
     }
 
     @PutMapping("/{id}")
-    public MenuModel updateMenu(@PathVariable Integer id, @RequestBody MenuModel menu) {
+    public ResponseEntity<ApiResponse> updateMenu(@PathVariable Integer id, @RequestBody MenuModel menu) {
         return service.put(id, menu);
     }
 
     @PutMapping("/{id}/{state}")
-    public void changeState(@PathVariable Integer id, @PathVariable Integer state) {
-        service.changeState(id, state);
+    public ResponseEntity<ApiResponse> changeState(@PathVariable Integer id, @PathVariable Integer state) {
+        return service.changeState(id, state);
     }
 }

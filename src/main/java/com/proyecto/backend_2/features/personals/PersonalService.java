@@ -2,15 +2,19 @@ package com.proyecto.backend_2.features.personals;
 
 import java.util.List;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import com.proyecto.backend_2.dtos.PersonalInfoUserDto;
-import com.proyecto.backend_2.dtos.PersonalRequestDto;
-import com.proyecto.backend_2.dtos.UpdatePersonalRequestDto;
+import com.proyecto.backend_2.dtos.requests.PersonalRequest;
+import com.proyecto.backend_2.dtos.requests.UpdatePersonalRequest;
+import com.proyecto.backend_2.dtos.responses.PersonalInfoUserDto;
+import com.proyecto.backend_2.exceptions.ResourceAlreadyExistsException;
 import com.proyecto.backend_2.features.data.DataModel;
 import com.proyecto.backend_2.features.data.repositories.DataRepository;
 import com.proyecto.backend_2.features.data.repositories.DataRepository2;
 import com.proyecto.backend_2.ids.DataId;
+import com.proyecto.backend_2.utils.ApiResponse;
+import com.proyecto.backend_2.utils.CustomResponseBuilder;
 
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
@@ -22,6 +26,7 @@ public class PersonalService {
     private final PersonalRepository repository;
     private final DataRepository dataRepository;
     private final DataRepository2 dataRepository2;
+    private final CustomResponseBuilder customResponseBuilder;
 
     public List<PersonalModel> get() {
         return repository.findAll();
@@ -43,42 +48,48 @@ public class PersonalService {
         return repository.getByFilter(tipo, estado);
     }
 
-    public PersonalModel post(PersonalRequestDto post) {
-        PersonalModel p = repository.save(post.getPersona());
-        if (post.getCedula() != null) {
-            DataId id = new DataId(p.getCodp(), post.getCedula());
+    public ResponseEntity<ApiResponse> post(PersonalRequest post) {
+        String capitalizado = post.persona().getNombre().substring(0, 1).toUpperCase()
+                + post.persona().getNombre().substring(1);
+        if (repository.findName(capitalizado)) {
+            throw new ResourceAlreadyExistsException("El nombre del recurso ya existe");
+        }
+        PersonalModel p = repository.save(post.persona());
+        if (post.cedula() != null) {
+            DataId id = new DataId(p.getCodp(), post.cedula());
             dataRepository.save(new DataModel(id, p));
         }
-        return p;
+        return customResponseBuilder.buildResponse("Guardado con exito", p);
     }
 
     @Transactional
-    public PersonalModel put(UpdatePersonalRequestDto put, int id) {
-        if (put.getNewCedula() == null || put.getNewCedula().trim().isEmpty()) {
+    public ResponseEntity<ApiResponse> put(UpdatePersonalRequest put, int id) {
+        if (put.newCedula() == null || put.newCedula().trim().isEmpty()) {
             throw new IllegalArgumentException("La nueva cédula ('newcedula') no puede ser nula o vacía.");
         }
         PersonalModel p = repository.findById(id)
                 .orElseThrow(
                         () -> new EntityNotFoundException("No se encontró el registro de Personal con codp: " + id));
-        p.setNombre(put.getNombre());
-        p.setAp(put.getAp());
-        p.setAm(put.getAm());
-        p.setEstado(put.getEstado());
-        p.setFnac(put.getFnac());
-        p.setEcivil(put.getEcivil());
-        p.setGenero(put.getGenero());
-        p.setDirec(put.getDirec());
-        p.setTelf(put.getTelf());
-        p.setTipo(put.getTipo());
-        p.setFoto(put.getFoto());
-        PersonalModel actualizado = repository.save(p);
-        dataRepository2.updateCedula(id, put.getNewCedula());
-        return actualizado;
+        p.setNombre(put.nombre());
+        p.setAp(put.ap());
+        p.setAm(put.am());
+        p.setEstado(put.estado());
+        p.setFnac(put.fnac());
+        p.setEcivil(put.ecivil());
+        p.setGenero(put.genero());
+        p.setDirec(put.direc());
+        p.setTelf(put.telf());
+        p.setTipo(put.tipo());
+        p.setFoto(put.foto());
+        PersonalModel modify = repository.save(p);
+        dataRepository2.updateCedula(id, put.newCedula());
+        return customResponseBuilder.buildResponse("Modificado correctamente", modify);
     }
 
     @Transactional
-    public void changeState(Integer id, Integer state) {
+    public ResponseEntity<ApiResponse> changeState(Integer id, Integer state) {
         repository.changeState(id, state);
+        return customResponseBuilder.buildResponse("Modificado correctamente", state);
     }
 
     public List<PersonalInfoUserDto> getPersonalInfoUser() {

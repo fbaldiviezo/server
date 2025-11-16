@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.proyecto.backend_2.dtos.ProcessByMenuDto;
+import com.proyecto.backend_2.dtos.responses.ProcessByMenuDto;
 
 import lombok.RequiredArgsConstructor;
 

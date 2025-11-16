@@ -5,9 +5,9 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.proyecto.backend_2.dtos.MenuDto;
-import com.proyecto.backend_2.dtos.ProcessDto;
-import com.proyecto.backend_2.dtos.RolDto;
+import com.proyecto.backend_2.dtos.responses.MenuDto;
+import com.proyecto.backend_2.dtos.responses.ProcessDto;
+import com.proyecto.backend_2.dtos.responses.RolDto;
 import com.proyecto.backend_2.features.menus.MenuModel;
 import com.proyecto.backend_2.features.mepro.MeproRepository;
 import com.proyecto.backend_2.features.process.ProcessModel;
