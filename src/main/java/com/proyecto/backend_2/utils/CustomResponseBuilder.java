@@ -8,4 +8,8 @@ public class CustomResponseBuilder {
     public ResponseEntity<ApiResponse> buildResponse(String message, Object data) {
         return new ApiResponse.ApiResponseBuilder(message).withData(data).build();
     }
+
+    public ResponseEntity<ApiResponse> buildResponse(String message, Object data, Object data2) {
+        return new ApiResponse.ApiResponseBuilder(message).withData(data).withData2(data2).build();
+    }
 }

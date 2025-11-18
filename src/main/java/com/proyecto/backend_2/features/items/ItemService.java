@@ -25,6 +25,9 @@ public class ItemService {
     }
 
     public List<ItemModel> getByState(Integer state) {
+        if (state == 2) {
+            return repository.findAll();
+        }
         return repository.getByState(state);
     }
 

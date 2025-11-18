@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.proyecto.backend_2.ids.MeproId;
+import com.proyecto.backend_2.dtos.requests.MeproRequest;
 import com.proyecto.backend_2.utils.ApiResponse;
 
 import lombok.RequiredArgsConstructor;
@@ -20,12 +20,13 @@ public class MeproController {
     private final MeproService service;
 
     @PostMapping
-    public ResponseEntity<ApiResponse> saveData(@RequestBody MeproId mepro) {
+    public ResponseEntity<ApiResponse> saveData(@RequestBody MeproRequest mepro) {
         return service.save(mepro);
     }
 
-    @DeleteMapping("/{codm}/{codp}")
-    public ResponseEntity<ApiResponse> deleteData(@PathVariable Integer codm, @PathVariable Integer codp) {
-        return service.delete(codm, codp);
+    @DeleteMapping("/{codm}/{codp}/{login}")
+    public ResponseEntity<ApiResponse> deleteData(@PathVariable Integer codm, @PathVariable Integer codp,
+            @PathVariable String login) {
+        return service.delete(codm, codp, login);
     }
 }

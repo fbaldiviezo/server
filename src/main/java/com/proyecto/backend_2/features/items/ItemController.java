@@ -27,6 +27,11 @@ public class ItemController {
         return service.getItems();
     }
 
+    @GetMapping("/filter/{state}")
+    public List<ItemModel> getItemsByState(@PathVariable Integer state) {
+        return service.getByState(state);
+    }
+
     @GetMapping("/filter/subject/{codmat}")
     public List<ItemsBySubjectDto> getItemsBySubject(@PathVariable String codmat) {
         return service.getItemsBySubject(codmat);
