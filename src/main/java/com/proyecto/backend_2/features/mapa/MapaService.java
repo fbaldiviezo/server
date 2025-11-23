@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.proyecto.backend_2.dtos.requests.MapaRequest;
+import com.proyecto.backend_2.exceptions.ResourceAlreadyExistsException;
 import com.proyecto.backend_2.features.parallels.ParallelModel;
 import com.proyecto.backend_2.features.parallels.ParallelRepository;
 import com.proyecto.backend_2.features.subjects.SubjectModel;
@@ -32,6 +33,12 @@ public class MapaService {
                                 .orElseThrow(() -> new EntityNotFoundException("No existe el paralelo"));
                 SubjectModel materia = subjectRepository.findById(mapa.codmat())
                                 .orElseThrow(() -> new EntityNotFoundException("No existe la materia"));
+
+                // Validar si el paralelo ya existe para esta materia (paralelo duplicado)
+                if (repository.existsMapaBySubjectAndParallel(mapa.codmat(), mapa.codpar()) > 0) {
+                        throw new ResourceAlreadyExistsException("El paralelo ya existe para esta materia");
+                }
+
                 Integer currentYear = LocalDate.now().getYear();
                 MapaRequest newMapa = new MapaRequest(
                                 mapa.codmat(),

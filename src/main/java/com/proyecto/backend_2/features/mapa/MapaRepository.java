@@ -10,4 +10,7 @@ public interface MapaRepository extends JpaRepository<MapaModel, MapaId> {
     @Query(value = "update mapa set estado = :state where codmat = :codmat and codpar = :codpar;", nativeQuery = true)
     public void changeState(@Param("codmat") String codmat, @Param("codpar") Integer codpar,
             @Param("state") Integer state);
+
+    @Query(value = "SELECT COUNT(*) FROM mapa WHERE codmat = :codmat AND codpar = :codpar", nativeQuery = true)
+    public Integer existsMapaBySubjectAndParallel(@Param("codmat") String codmat, @Param("codpar") Integer codpar);
 }

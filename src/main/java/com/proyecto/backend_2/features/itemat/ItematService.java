@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.proyecto.backend_2.dtos.requests.ItematRequest;
+import com.proyecto.backend_2.exceptions.ResourceAlreadyExistsException;
 import com.proyecto.backend_2.exceptions.ResourceNotFoundException;
 import com.proyecto.backend_2.features.items.ItemModel;
 import com.proyecto.backend_2.features.items.ItemRepository;
@@ -32,6 +33,18 @@ public class ItematService {
                 .orElseThrow(() -> new ResourceNotFoundException("No existe el recurso"));
         ItemModel item = itemRepository.findById(itemat.codi())
                 .orElseThrow(() -> new ResourceNotFoundException("No existe el recurso"));
+
+        // Validar si el item ya existe para esta materia (nombre duplicado)
+        if (repository.existsItematBySubjectAndItem(itemat.codmat(), itemat.codi()) > 0) {
+            throw new ResourceAlreadyExistsException("El item ya existe para esta materia");
+        }
+
+        // Validar que la suma de ponderaciones más la que entra no supere 100
+        Integer currentSum = repository.calcPonderacion(itemat.codmat());
+        if (currentSum != null && (currentSum + itemat.ponderacion()) > 100) {
+            throw new ResourceAlreadyExistsException("La suma de ponderacion no debe ser mayor a 100");
+        }
+
         Integer gestion = LocalDate.now().getYear();
         ItematId id = new ItematId(itemat.codmat(), itemat.codi(), gestion);
         ItematModel model = ItematModel.builder()

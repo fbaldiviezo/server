@@ -44,7 +44,7 @@ public class DmodalityService {
             throw new ResourceAlreadyExistsException("El recurso ya existe");
         }
         ModalityModel modalidad = modalityRepository.findById(post.codm())
-                .orElseThrow(() -> new EntityNotFoundException("Nivel no encontrado"));
+                .orElseThrow(() -> new EntityNotFoundException("Modalidad no encontrada"));
         DmodalityModel model = DmodalityModel.builder()
                 .coddm(post.coddm())
                 .nombre(post.nombre())
