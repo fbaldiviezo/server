@@ -1,14 +1,18 @@
 package com.proyecto.backend_2.features.mapa;
 
+import java.util.List;
+
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.proyecto.backend_2.dtos.requests.MapaRequest;
+import com.proyecto.backend_2.dtos.responses.LevelSubjectParallelDto;
 import com.proyecto.backend_2.utils.ApiResponse;
 
 import lombok.RequiredArgsConstructor;
@@ -24,9 +28,14 @@ public class MapaController {
         return service.save(mapa);
     }
 
-    @DeleteMapping("/{codmat}/{codpar}/{gestion}")
+    @GetMapping("/list")
+    public List<LevelSubjectParallelDto> getList() {
+        return service.getList();
+    }
+
+    @PutMapping("/{codmat}/{codpar}/{estado}/{login}")
     public ResponseEntity<ApiResponse> changeState(@PathVariable String codmat, @PathVariable Integer codpar,
-            @PathVariable Integer estado) {
-        return service.changeState(codmat, codpar, estado);
+            @PathVariable Integer estado, @PathVariable String login) {
+        return service.changeState(codmat, codpar, estado, login);
     }
 }

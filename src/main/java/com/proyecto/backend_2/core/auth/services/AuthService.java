@@ -12,6 +12,7 @@ import com.proyecto.backend_2.core.auth.dtos.ChangePasswordRequest;
 import com.proyecto.backend_2.core.auth.dtos.LoginRequest;
 import com.proyecto.backend_2.core.auth.dtos.RegisterRequest;
 import com.proyecto.backend_2.exceptions.ResourceAlreadyExistsException;
+import com.proyecto.backend_2.exceptions.ResourceNotFoundException;
 import com.proyecto.backend_2.features.general.GeneralModel;
 import com.proyecto.backend_2.features.general.GeneralRepository;
 import com.proyecto.backend_2.features.users.UserModel;
@@ -52,6 +53,24 @@ public class AuthService {
                                 .token(token)
                                 .roles(this.usuariosMenuService.obtenerRolesMenusProcesos(login.getLogin()))
                                 .build();
+        }
+
+        public ResponseEntity<ApiResponse> login2(LoginRequest login) {
+                authenticationManager
+                                .authenticate(new UsernamePasswordAuthenticationToken(login.getLogin(),
+                                                login.getPassword()));
+                UserModel user = repository.findByLogin(login.getLogin())
+                                .orElseThrow(() -> new ResourceNotFoundException("No se encontro el usuario"));
+                Boolean getAccess = repository.existsByLoginAndPerson_Tipo(login.getLogin(), "E");
+                if (!getAccess) {
+                        throw new ResourceNotFoundException("Solo estudiante pueden ingresar");
+                }
+                String token = jwtService.getToken(user);
+                AuthResponse response = AuthResponse.builder()
+                                .persona(repository.getPersonaUsuario(login.getLogin()))
+                                .token(token)
+                                .build();
+                return customResponseBuilder.buildResponse("Bienvenido!!", response);
         }
 
         public ResponseEntity<ApiResponse> register(RegisterRequest register) {

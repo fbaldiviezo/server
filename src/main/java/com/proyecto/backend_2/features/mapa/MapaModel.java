@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.proyecto.backend_2.features.dicta.DictaModel;
 import com.proyecto.backend_2.features.parallels.ParallelModel;
+import com.proyecto.backend_2.features.progra.PrograModel;
 import com.proyecto.backend_2.features.subjects.SubjectModel;
 import com.proyecto.backend_2.ids.MapaId;
 
@@ -52,4 +53,8 @@ public class MapaModel {
     @Getter(AccessLevel.NONE)
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "mapa", cascade = CascadeType.ALL)
     private List<DictaModel> dictas;
+
+    @Getter(AccessLevel.NONE)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "mapa", cascade = CascadeType.ALL)
+    private List<PrograModel> progras;
 }

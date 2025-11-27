@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.proyecto.backend_2.dtos.requests.PersonalRequest;
 import com.proyecto.backend_2.dtos.requests.UpdatePersonalRequest;
+import com.proyecto.backend_2.dtos.responses.PersonalLoginDto;
 import com.proyecto.backend_2.dtos.responses.PersonalInfoUserDto;
 import com.proyecto.backend_2.utils.ApiResponse;
 
@@ -39,6 +40,16 @@ public class PersonalController {
     @GetMapping("/info")
     public List<PersonalInfoUserDto> getInfoPersonal() {
         return service.getPersonalInfoUser();
+    }
+
+    @GetMapping("/docentes")
+    public List<PersonalLoginDto> getDocentes() {
+        return service.getDocentes();
+    }
+
+    @GetMapping("/estudiantes")
+    public List<PersonalLoginDto> getEstudiantes() {
+        return service.getEstudiantes();
     }
 
     @PostMapping

@@ -1,9 +1,9 @@
 package com.proyecto.backend_2.features.itemat;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,9 +24,9 @@ public class ItematController {
         return service.save(itemat);
     }
 
-    @DeleteMapping("/{codmat}/{codi}/{state}")
+    @PutMapping("/{codmat}/{codi}/{state}/{login}")
     public ResponseEntity<ApiResponse> changeState(@PathVariable String codmat, @PathVariable Integer codi,
-            @PathVariable Integer state) {
-        return service.changeState(codmat, codi, state);
+            @PathVariable Integer state, @PathVariable String login) {
+        return service.changeState(codmat, codi, state, login);
     }
 }

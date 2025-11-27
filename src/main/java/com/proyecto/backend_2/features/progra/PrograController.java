@@ -1,4 +1,4 @@
-package com.proyecto.backend_2.features.dicta;
+package com.proyecto.backend_2.features.progra;
 
 import java.util.List;
 
@@ -15,16 +15,16 @@ import org.springframework.web.bind.annotation.RestController;
 import com.proyecto.backend_2.dtos.requests.PersonAsignedRequest;
 import com.proyecto.backend_2.dtos.requests.UpdateAsignedPerson;
 import com.proyecto.backend_2.dtos.responses.MapaDataDto;
-import com.proyecto.backend_2.ids.DictaId;
+import com.proyecto.backend_2.ids.PrograId;
 import com.proyecto.backend_2.utils.ApiResponse;
 
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/api/asign/dicta")
+@RequestMapping("/api/asign/progra")
 @RequiredArgsConstructor
-public class DictaController {
-    private final DictaService service;
+public class PrograController {
+    private final PrograService service;
 
     @GetMapping
     public List<MapaDataDto> getList() {
@@ -37,20 +37,20 @@ public class DictaController {
     }
 
     @PostMapping
-    public ResponseEntity<ApiResponse> saveDicta(@RequestBody PersonAsignedRequest dicta) {
-        return service.save(dicta);
+    public ResponseEntity<ApiResponse> saveProgra(@RequestBody PersonAsignedRequest progra) {
+        return service.save(progra);
     }
 
     @PutMapping
-    public ResponseEntity<ApiResponse> updateDicta(@RequestBody UpdateAsignedPerson dicta) {
-        return service.updateFull(dicta);
+    public ResponseEntity<ApiResponse> updateProgra(@RequestBody UpdateAsignedPerson progra) {
+        return service.updateFull(progra);
     }
 
     @DeleteMapping("/{codp}/{codmat}/{codpar}/{gestion}")
-    public ResponseEntity<ApiResponse> deleteDicta(@PathVariable Integer codp, @PathVariable String codmat,
+    public ResponseEntity<ApiResponse> deleteProgra(@PathVariable Integer codp, @PathVariable String codmat,
             @PathVariable Integer codpar,
             @PathVariable Integer gestion) {
-        DictaId id = new DictaId(codp, codmat, codpar, gestion);
+        PrograId id = new PrograId(codp, codmat, codpar, gestion);
         return service.delete(id);
     }
 }

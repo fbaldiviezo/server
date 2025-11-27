@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.proyecto.backend_2.dtos.requests.PersonalRequest;
 import com.proyecto.backend_2.dtos.requests.UpdatePersonalRequest;
+import com.proyecto.backend_2.dtos.responses.PersonalLoginDto;
 import com.proyecto.backend_2.dtos.responses.PersonalInfoUserDto;
 import com.proyecto.backend_2.exceptions.ResourceAlreadyExistsException;
 import com.proyecto.backend_2.features.data.DataModel;
@@ -94,5 +95,13 @@ public class PersonalService {
 
     public List<PersonalInfoUserDto> getPersonalInfoUser() {
         return repository.getPersonalInfo();
+    }
+
+    public List<PersonalLoginDto> getDocentes() {
+        return repository.getDocenteAndLogin();
+    }
+
+    public List<PersonalLoginDto> getEstudiantes() {
+        return repository.getEstudianteAndLogin();
     }
 }

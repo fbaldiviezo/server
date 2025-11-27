@@ -1,4 +1,4 @@
-package com.proyecto.backend_2.features.dicta;
+package com.proyecto.backend_2.features.progra;
 
 import java.util.List;
 
@@ -8,14 +8,14 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.proyecto.backend_2.dtos.responses.MapaDataDto;
-import com.proyecto.backend_2.ids.DictaId;
+import com.proyecto.backend_2.ids.PrograId;
 
 @Repository
-public interface DictaRepository extends JpaRepository<DictaModel, DictaId> {
+public interface PrograRepository extends JpaRepository<PrograModel, PrograId> {
     @Query(value = "select n.nombre as nivel, m.nombre as materia,  p.nombre || ' ' || p.ap || ' ' || p.am as nombre, par.nombre as paralelo,\n"
             + //
             "p.codp, u.login, m.codmat, par.codpar, d.gestion\n" + //
-            "from dicta d\n" + //
+            "from progra d\n" + //
             "join materias m on d.codmat = m.codmat\n" + //
             "join niveles n on m.codn = n.codn\n" + //
             "join personal p on d.codp = p.codp\n" + //
@@ -26,7 +26,7 @@ public interface DictaRepository extends JpaRepository<DictaModel, DictaId> {
     @Query(value = "select n.nombre as nivel, m.nombre as materia,  p.nombre || ' ' || p.ap || ' ' || p.am as nombre, par.nombre as paralelo,\n"
             + //
             "p.codp, u.login, m.codmat, par.codpar, d.gestion\n" + //
-            "from dicta d\n" + //
+            "from progra d\n" + //
             "join materias m on d.codmat = m.codmat\n" + //
             "join niveles n on m.codn = n.codn and n.nombre = :nombre\n" + //
             "join personal p on d.codp = p.codp\n" + //

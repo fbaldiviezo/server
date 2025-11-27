@@ -16,28 +16,33 @@ import jakarta.transaction.Transactional;
 
 @Repository
 public interface UserRepository extends JpaRepository<UserModel, String> {
-    // Encontrar al usuario por su login
-    Optional<UserModel> findByLogin(String login);
+        // Encontrar al usuario por su login
+        Optional<UserModel> findByLogin(String login);
 
-    // Query para enlazar el usuario a la persona al momento del registro
-    @Transactional
-    @Modifying
-    @Query(value = "update usuarios set codp = :xcodp where login = :xlogin", nativeQuery = true)
-    void changeCodp(@Param("xcodp") Integer xcodp, @Param("xlogin") String xlogin);
+        // Query para enlazar el usuario a la persona al momento del registro
+        @Transactional
+        @Modifying
+        @Query(value = "update usuarios set codp = :xcodp where login = :xlogin", nativeQuery = true)
+        void changeCodp(@Param("xcodp") Integer xcodp, @Param("xlogin") String xlogin);
 
-    // Query para extraer los roles del usuario
-    @Query(value = "select r.* from usuarios u join usurol us on us.login = u.login" +
-            " join roles r on r.codr = us.codr where us.login = :xlogin and r.estado = 1", nativeQuery = true)
-    List<RolModel> getRolesUsuario(@Param("xlogin") String xlogin);
+        // Query para extraer los roles del usuario
+        @Query(value = "select r.* from usuarios u join usurol us on us.login = u.login" +
+                        " join roles r on r.codr = us.codr where us.login = :xlogin and r.estado = 1", nativeQuery = true)
+        List<RolModel> getRolesUsuario(@Param("xlogin") String xlogin);
 
-    // Query para obtener la persona
-    @Query(value = "select p.* from usuarios u join personal p on p.codp = u.codp where u.login = :xlogin", nativeQuery = true)
-    PersonalModel getPersonaUsuario(@Param("xlogin") String xlogin);
+        // Query para obtener la persona
+        @Query(value = "select p.* from usuarios u join personal p on p.codp = u.codp where u.login = :xlogin", nativeQuery = true)
+        PersonalModel getPersonaUsuario(@Param("xlogin") String xlogin);
 
-    @Query(value = "SELECT EXISTS (\n" + //
-            "    SELECT 1\n" + //
-            "    FROM usuarios\n" + //
-            "    WHERE codp = :codp\n" + //
-            ") AS existe;", nativeQuery = true)
-    Boolean getCodp(@Param("codp") Integer codp);
+        @Query(value = "SELECT EXISTS (\n" + //
+                        "    SELECT 1\n" + //
+                        "    FROM usuarios\n" + //
+                        "    WHERE codp = :codp\n" + //
+                        ") AS existe;", nativeQuery = true)
+        Boolean getCodp(@Param("codp") Integer codp);
+
+        public abstract java.lang.Boolean existsByLoginAndPerson_Tipo(java.lang.String login, java.lang.String tipo);
+
+        @Query(value = "select login from usuarios where codp = :codp", nativeQuery = true)
+        String getLogin(@Param("codp") Integer codp);
 }

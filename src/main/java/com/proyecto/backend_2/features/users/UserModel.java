@@ -12,6 +12,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.proyecto.backend_2.features.dicta.DictaModel;
 import com.proyecto.backend_2.features.general.GeneralModel;
 import com.proyecto.backend_2.features.personals.PersonalModel;
+import com.proyecto.backend_2.features.progra.PrograModel;
 import com.proyecto.backend_2.features.usurol.UsurolModel;
 
 import jakarta.persistence.CascadeType;
@@ -70,6 +71,10 @@ public class UserModel implements UserDetails {
     @Getter(AccessLevel.NONE)
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "usuario", cascade = CascadeType.ALL)
     List<DictaModel> dicta;
+
+    @Getter(AccessLevel.NONE)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "usuario", cascade = CascadeType.ALL)
+    List<PrograModel> progra;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

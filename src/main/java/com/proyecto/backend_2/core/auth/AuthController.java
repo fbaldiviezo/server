@@ -27,6 +27,11 @@ public class AuthController {
         return ResponseEntity.ok(service.login(login));
     }
 
+    @PostMapping("/login2")
+    public ResponseEntity<ApiResponse> login2(@RequestBody LoginRequest login) {
+        return service.login2(login);
+    }
+
     @PostMapping("/register")
     public ResponseEntity<ApiResponse> register(@RequestBody RegisterRequest register) {
         return service.register(register);

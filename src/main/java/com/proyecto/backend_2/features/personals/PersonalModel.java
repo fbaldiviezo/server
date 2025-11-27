@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.proyecto.backend_2.features.data.DataModel;
 import com.proyecto.backend_2.features.dicta.DictaModel;
+import com.proyecto.backend_2.features.progra.PrograModel;
 import com.proyecto.backend_2.features.users.UserModel;
 
 import jakarta.persistence.CascadeType;
@@ -81,4 +82,8 @@ public class PersonalModel {
     @Getter(AccessLevel.NONE)
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "persona", cascade = CascadeType.ALL)
     List<DictaModel> dicta;
+
+    @Getter(AccessLevel.NONE)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "persona", cascade = CascadeType.ALL)
+    List<PrograModel> progra;
 }
