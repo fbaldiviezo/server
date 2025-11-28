@@ -8,8 +8,10 @@ import org.springframework.stereotype.Service;
 
 import com.proyecto.backend_2.dtos.responses.MenuDto;
 import com.proyecto.backend_2.dtos.responses.MenusByRoleDto;
+import com.proyecto.backend_2.dtos.responses.RolDto;
 import com.proyecto.backend_2.exceptions.ResourceAlreadyExistsException;
 import com.proyecto.backend_2.exceptions.ResourceNotFoundException;
+import com.proyecto.backend_2.features.users.services.UsuariosMenuService;
 import com.proyecto.backend_2.utils.ApiResponse;
 import com.proyecto.backend_2.utils.CustomResponseBuilder;
 
@@ -20,6 +22,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class MenuService {
     private final MenuRepository repository;
+    private final UsuariosMenuService usuariosMenuService;
     private final CustomResponseBuilder customResponseBuilder;
 
     public List<MenuModel> get() {
@@ -46,7 +49,7 @@ public class MenuService {
         return customResponseBuilder.buildResponse("Guardado con exito", model);
     }
 
-    public ResponseEntity<ApiResponse> put(Integer id, MenuModel put) {
+    public ResponseEntity<ApiResponse> put(Integer id, String login, MenuModel put) {
         MenuModel existing = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("No existe el recurso"));
         String capitalizado = put.getNombre().substring(0, 1).toUpperCase() + put.getNombre().substring(1);
@@ -56,7 +59,8 @@ public class MenuService {
         }
         put.setCodm(id);
         MenuModel modify = repository.save(put);
-        return customResponseBuilder.buildResponse("Modificado correctamente", modify);
+        List<RolDto> roles = usuariosMenuService.obtenerRolesMenusProcesos(login);
+        return customResponseBuilder.buildResponse("Modificado correctamente", modify, roles);
     }
 
     @Transactional
@@ -69,7 +73,8 @@ public class MenuService {
         List<MenuModel> menus = repository.getMenusRol(codr);
         List<MenuDto> menuRol = new ArrayList<>();
         for (MenuModel x : menus) {
-            menuRol.add(new MenuDto(x.getCodm(), x.getNombre(), repository.getProcesosMenu(x.getCodm())));
+            menuRol.add(
+                    new MenuDto(x.getCodm(), x.getNombre(), x.getEstado(), repository.getProcesosMenu(x.getCodm())));
         }
         return menuRol;
     }

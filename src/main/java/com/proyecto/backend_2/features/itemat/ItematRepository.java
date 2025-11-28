@@ -41,4 +41,6 @@ public interface ItematRepository extends JpaRepository<ItematModel, ItematId> {
 
         @Query(value = "SELECT codi FROM itemat WHERE codmat = :codmat AND estado = 1", nativeQuery = true)
         public Integer getCodi(@Param("codmat") String codmat);
+
+        public java.util.List<ItematModel> findByIteMateriaCodmat(String codmat);
 }

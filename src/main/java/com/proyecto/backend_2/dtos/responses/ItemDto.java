@@ -1,7 +1,5 @@
 package com.proyecto.backend_2.dtos.responses;
 
-import java.util.List;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,9 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class MenuDto {
-    private Integer codm;
-    private String nombre;
-    private Integer estado;
-    List<ProcessDto> procesos;
+public class ItemDto {
+    private String nombreItem;
+    private Integer ponderacion;
 }

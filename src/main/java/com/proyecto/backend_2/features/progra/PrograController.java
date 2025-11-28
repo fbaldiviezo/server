@@ -12,9 +12,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.proyecto.backend_2.dtos.requests.AddNotaRequest;
 import com.proyecto.backend_2.dtos.requests.PersonAsignedRequest;
 import com.proyecto.backend_2.dtos.requests.UpdateAsignedPerson;
 import com.proyecto.backend_2.dtos.responses.MapaDataDto;
+import com.proyecto.backend_2.dtos.responses.SubjectsByStudent;
+import com.proyecto.backend_2.features.progra.services.MateriasPersonalService;
+import com.proyecto.backend_2.features.progra.services.PrograService;
 import com.proyecto.backend_2.ids.PrograId;
 import com.proyecto.backend_2.utils.ApiResponse;
 
@@ -25,6 +29,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class PrograController {
     private final PrograService service;
+    private final MateriasPersonalService materiasPersonalService;
 
     @GetMapping
     public List<MapaDataDto> getList() {
@@ -36,6 +41,11 @@ public class PrograController {
         return service.getFilteredList(nivel);
     }
 
+    @GetMapping("/materias/{login}")
+    public List<SubjectsByStudent> getMateriasByStudent(@PathVariable String login) {
+        return materiasPersonalService.getSubjectsByStudent(login);
+    }
+
     @PostMapping
     public ResponseEntity<ApiResponse> saveProgra(@RequestBody PersonAsignedRequest progra) {
         return service.save(progra);
@@ -44,6 +54,11 @@ public class PrograController {
     @PutMapping
     public ResponseEntity<ApiResponse> updateProgra(@RequestBody UpdateAsignedPerson progra) {
         return service.updateFull(progra);
+    }
+
+    @PostMapping("/nota")
+    public ResponseEntity<ApiResponse> addNota(@RequestBody AddNotaRequest nota) {
+        return service.addNota(nota);
     }
 
     @DeleteMapping("/{codp}/{codmat}/{codpar}/{gestion}")

@@ -55,9 +55,10 @@ public class MenuController {
         return service.post(menu);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<ApiResponse> updateMenu(@PathVariable Integer id, @RequestBody MenuModel menu) {
-        return service.put(id, menu);
+    @PutMapping("/{id}/usr/{login}")
+    public ResponseEntity<ApiResponse> updateMenu(@PathVariable Integer id, @PathVariable String login,
+            @RequestBody MenuModel menu) {
+        return service.put(id, login, menu);
     }
 
     @PutMapping("/{id}/{state}")

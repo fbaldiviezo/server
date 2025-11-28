@@ -50,8 +50,6 @@ public class PrograModel {
     @JoinColumn(name = "login")
     private UserModel usuario;
 
-    @Getter(AccessLevel.NONE)
-    @Setter(AccessLevel.NONE)
     @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("id")
     @JoinColumns({

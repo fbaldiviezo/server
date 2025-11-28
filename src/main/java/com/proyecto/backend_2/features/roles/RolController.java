@@ -49,9 +49,10 @@ public class RolController {
         return service.post(role);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<ApiResponse> updateRole(@PathVariable Integer id, @RequestBody RolModel rol) {
-        return service.put(id, rol);
+    @PutMapping("/{id}/usr/{login}")
+    public ResponseEntity<ApiResponse> updateRole(@PathVariable Integer id, @PathVariable String login,
+            @RequestBody RolModel rol) {
+        return service.put(id, login, rol);
     }
 
     @PutMapping("/{id}/{state}")

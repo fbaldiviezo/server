@@ -5,9 +5,11 @@ import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import com.proyecto.backend_2.dtos.responses.RolDto;
 import com.proyecto.backend_2.dtos.responses.RolesByUsersDto;
 import com.proyecto.backend_2.exceptions.ResourceAlreadyExistsException;
 import com.proyecto.backend_2.exceptions.ResourceNotFoundException;
+import com.proyecto.backend_2.features.users.services.UsuariosMenuService;
 import com.proyecto.backend_2.utils.ApiResponse;
 import com.proyecto.backend_2.utils.CustomResponseBuilder;
 
@@ -18,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class RolService {
     private final RolRepository repository;
+    private final UsuariosMenuService usuariosMenuService;
     private final CustomResponseBuilder customResponseBuilder;
 
     public List<RolModel> get() {
@@ -44,7 +47,7 @@ public class RolService {
         return customResponseBuilder.buildResponse("Guardado con exito", model);
     }
 
-    public ResponseEntity<ApiResponse> put(Integer id, RolModel put) {
+    public ResponseEntity<ApiResponse> put(Integer id, String login, RolModel put) {
         RolModel existing = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("No existe el recurso"));
         String capitalizado = put.getNombre().substring(0, 1).toUpperCase() + put.getNombre().substring(1);
@@ -54,7 +57,8 @@ public class RolService {
         }
         put.setCodr(id);
         RolModel modify = repository.save(put);
-        return customResponseBuilder.buildResponse("Modificado correctamente", modify);
+        List<RolDto> roles = usuariosMenuService.obtenerRolesMenusProcesos(login);
+        return customResponseBuilder.buildResponse("Modificado correctamente", modify, roles);
     }
 
     @Transactional

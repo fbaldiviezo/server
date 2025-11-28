@@ -10,4 +10,9 @@ public interface NotasRepository extends JpaRepository<NotasModel, NotaId> {
     @Query(value = "select nota from notas where codp = :codp and login = :login and codmat = :codmat and codpar = :codpar and gestion = :gestion", nativeQuery = true)
     public Integer getNota(@Param("codp") Integer codp, @Param("login") String login, @Param("codmat") String codmat,
             @Param("codpar") Integer codpar, @Param("gestion") Integer gestion);
+
+    @Query(value = "update notas set nota = :nota \n" + //
+            "where codp = :codp and login = :login and codmat = :codmat and codpar = :codpar and gestion = :gestion", nativeQuery = true)
+    public Integer addNota(@Param("codp") Integer codp, @Param("login") String login, @Param("codmat") String codmat,
+            @Param("codpar") Integer codpar, @Param("gestion") Integer gestion, @Param("nota") Integer nota);
 }

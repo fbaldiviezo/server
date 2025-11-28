@@ -1,10 +1,11 @@
-package com.proyecto.backend_2.features.progra;
+package com.proyecto.backend_2.features.progra.services;
 
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import com.proyecto.backend_2.dtos.requests.AddNotaRequest;
 import com.proyecto.backend_2.dtos.requests.PersonAsignedRequest;
 import com.proyecto.backend_2.dtos.requests.UpdateAsignedPerson;
 import com.proyecto.backend_2.dtos.responses.MapaDataDto;
@@ -17,6 +18,8 @@ import com.proyecto.backend_2.features.notas.NotasModel;
 import com.proyecto.backend_2.features.notas.NotasRepository;
 import com.proyecto.backend_2.features.personals.PersonalModel;
 import com.proyecto.backend_2.features.personals.PersonalRepository;
+import com.proyecto.backend_2.features.progra.PrograModel;
+import com.proyecto.backend_2.features.progra.PrograRepository;
 import com.proyecto.backend_2.features.users.UserModel;
 import com.proyecto.backend_2.features.users.UserRepository;
 import com.proyecto.backend_2.ids.MapaId;
@@ -71,7 +74,8 @@ public class PrograService {
                                 progra.codmat(),
                                 progra.codpar(),
                                 gestion);
-                if (repository.existsById(prograId)) {
+                if (repository.existsByIdCodpAndIdCodmatAndIdCodparAndIdGestion(progra.codp(), progra.codmat(),
+                                progra.codpar(), gestion)) {
                         throw new ResourceAlreadyExistsException("Ya existe este recurso");
                 }
                 PrograModel model = PrograModel.builder()
@@ -142,7 +146,7 @@ public class PrograService {
                 Integer nota = notasRepository.getNota(updateAsignedPerson.oldCodp(), oldLogin,
                                 updateAsignedPerson.oldCodmat(),
                                 updateAsignedPerson.oldCodpar(), updateAsignedPerson.oldGestion());
-                notasRepository.delete(oldNotasModel);
+
                 // elije y elimina el antiguo nota
 
                 UserModel user = userRepository.findById(updateAsignedPerson.login())
@@ -151,11 +155,18 @@ public class PrograService {
                                 updateAsignedPerson.gestion());
                 MapaModel mapa = mapaRepository.findById(mapaId)
                                 .orElseThrow(() -> new ResourceNotFoundException("El mapa no existe"));
-                repository.delete(oldModel);
+
                 PrograId newId = new PrograId(updateAsignedPerson.codp(),
                                 updateAsignedPerson.codmat(),
                                 updateAsignedPerson.codpar(),
                                 updateAsignedPerson.oldGestion());
+
+                if (repository.existsById(newId)) {
+                        throw new ResourceAlreadyExistsException("Ya existe este recurso");
+                }
+
+                notasRepository.delete(oldNotasModel);
+                repository.delete(oldModel);
                 PrograModel newModel = PrograModel.builder()
                                 .id(newId)
                                 .usuario(user)
@@ -177,4 +188,12 @@ public class PrograService {
                 // Guarda el nuevo nota
                 return customResponseBuilder.buildResponse("Modificado con éxito", newModel);
         }
+
+        @Transactional
+        public ResponseEntity<ApiResponse> addNota(AddNotaRequest nota) {
+                Integer notaRes = notasRepository.addNota(nota.codp(), nota.login(), nota.codmat(), nota.codpar(),
+                                nota.gestion(), nota.nota());
+                return customResponseBuilder.buildResponse("Nota agregada con exito", notaRes);
+        }
+
 }

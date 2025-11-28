@@ -67,7 +67,7 @@ public class DictaService {
                                 dicta.codmat(),
                                 dicta.codpar(),
                                 gestion);
-                if (repository.existsById(dictaId)) {
+                if (repository.existsByIdCodpAndIdCodmatAndIdGestion(dicta.codp(), dicta.codmat(), gestion)) {
                         throw new ResourceAlreadyExistsException("Ya existe este recurso");
                 }
                 DictaModel model = DictaModel.builder()
@@ -119,13 +119,17 @@ public class DictaService {
                 MapaModel mapa = mapaRepository.findById(mapaId)
                                 .orElseThrow(() -> new ResourceNotFoundException("El mapa no existe"));
                 // 4. Eliminar registro antiguo
-                repository.delete(oldModel);
+
                 // 5. Crear nuevo registro
                 DictaId newId = new DictaId(
                                 req.codp(),
                                 req.codmat(),
                                 req.codpar(),
                                 req.oldGestion());
+                if (repository.existsById(newId)) {
+                        throw new ResourceAlreadyExistsException("Ya existe este recurso");
+                }
+                repository.delete(oldModel);
                 DictaModel newModel = DictaModel.builder()
                                 .id(newId)
                                 .usuario(user)

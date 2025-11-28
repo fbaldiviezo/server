@@ -44,7 +44,6 @@ public class MapaModel {
     @JoinColumn(name = "codpar")
     private ParallelModel mapaParalelo;
 
-    @Getter(AccessLevel.NONE)
     @ManyToOne
     @MapsId("codmat")
     @JoinColumn(name = "codmat")

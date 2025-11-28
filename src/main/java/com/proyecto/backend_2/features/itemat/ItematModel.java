@@ -11,11 +11,9 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.MapsId;
 import jakarta.persistence.Table;
-import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
@@ -34,13 +32,11 @@ public class ItematModel {
     @Column(name = "ponderacion", nullable = false)
     private Integer ponderacion;
 
-    @Getter(AccessLevel.NONE)
     @ManyToOne
     @MapsId("codmat")
     @JoinColumn(name = "codmat")
     private SubjectModel iteMateria;
 
-    @Getter(AccessLevel.NONE)
     @ManyToOne
     @MapsId("codi")
     @JoinColumn(name = "codi")
